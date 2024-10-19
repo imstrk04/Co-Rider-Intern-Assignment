@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="my-4">Users</h2>
+<a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">Create New User</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <a href="#" class="btn btn-info" data-toggle="modal" data-target="#userDetailModal{{ user._id }}">View</a>
+                <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#editUserModal{{ user._id }}">Edit</a>
+                <form action="{{ url_for('delete_user', id=user._id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+
+        <!-- User Detail Modal -->
+        <div class="modal fade" id="userDetailModal{{ user._id }}" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">User Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>ID:</strong> {{ user._id }}</p>
+                        <p><strong>Name:</strong> {{ user.name }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div class="modal fade" id="editUserModal{{ user._id }}" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ url_for('update_user', id=user._id) }}" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="editName{{ user._id }}">Name</label>
+                                <input type="text" class="form-control" id="editName{{ user._id }}" name="name" value="{{ user.name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEmail{{ user._id }}">Email</label>
+                                <input type="email" class="form-control" id="editEmail{{ user._id }}" name="email" value="{{ user.email }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPassword{{ user._id }}">Password</label>
+                                <input type="password" class="form-control" id="editPassword{{ user._id }}" name="password" placeholder="Leave blank to keep current password">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
